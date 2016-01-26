@@ -5,6 +5,9 @@ namespace Cloudbase.PSUtils
 {
     public class ProcessManager
     {
+        const int LOGON32_LOGON_INTERACTIVE = 2;
+        const int LOGON32_LOGON_NETWORK = 3;
+        const int LOGON32_LOGON_BATCH = 4;
         const int LOGON32_LOGON_SERVICE = 5;
         const int LOGON32_PROVIDER_DEFAULT = 0;
         const int TOKEN_ALL_ACCESS = 0x000f01ff;
@@ -184,7 +187,8 @@ namespace Cloudbase.PSUtils
         public static int RunProcess(string userName, string password,
                                       string domain, string cmd,
                                       string arguments,
-                                      bool loadUserProfile = true)
+                                      bool loadUserProfile = true,
+                                      int logonType = LOGON32_LOGON_BATCH)
         {
             bool retValue;
             IntPtr phToken = IntPtr.Zero;
@@ -195,7 +199,7 @@ namespace Cloudbase.PSUtils
             try
             {
                 retValue = LogonUser(userName, domain, password,
-                                     LOGON32_LOGON_SERVICE,
+                                     logonType,
                                      LOGON32_PROVIDER_DEFAULT,
                                      out phToken);
                 if (!retValue)
