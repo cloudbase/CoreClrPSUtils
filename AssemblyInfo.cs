@@ -16,9 +16,7 @@ limitations under the License.
 
 using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Security;
 
 [assembly: AssemblyTitle("Cloudbase CoreCLR PSUtils")]
 

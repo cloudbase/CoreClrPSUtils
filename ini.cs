@@ -51,13 +51,13 @@ namespace Cloudbase.PSUtils
             if(retVal == 0)
             {
                 var lastErr = Win32IniApi.GetLastError();
-                if(lastErr != 2)
+                if(lastErr != 0)
                 {
+                    if (lastErr == 2)
+                    {
+                        throw new Exception("Ini file '$Path' does not exist");
+                    }
                     throw new Exception("Cannot get value from ini file: " + lastErr);
-                }
-                else if (!System.IO.File.Exists(path))
-                {
-                    throw new Exception("Ini file '$Path' does not exist");
                 }
             }
 
