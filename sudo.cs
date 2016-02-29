@@ -178,12 +178,6 @@ namespace Cloudbase.PSUtils
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool UnloadUserProfile(IntPtr hToken, IntPtr hProfile);
 
-        [DllImport("Netapi32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
-        extern static int NetUserGetInfo(
-           [MarshalAs(UnmanagedType.LPWStr)] string ServerName,
-           [MarshalAs(UnmanagedType.LPWStr)] string UserName,
-           int level, out IntPtr BufPtr);
-
         public static int RunProcess(string userName, string password,
                                       string domain, string cmd,
                                       string arguments,
@@ -220,19 +214,9 @@ namespace Cloudbase.PSUtils
 
                 if (loadUserProfile)
                 {
-                    IntPtr userInfoPtr = IntPtr.Zero;
-                    int retValueNetUser = NetUserGetInfo(null, userName, 4,
-                                                         out userInfoPtr);
-                    if (retValueNetUser != 0)
-                        throw new Exception("Failed to get user info: " + retValueNetUser);
-
-                    USER_INFO_4 userInfo = (USER_INFO_4)Marshal.PtrToStructure(
-                        userInfoPtr, typeof(USER_INFO_4));
-
                     pi.dwSize = Marshal.SizeOf(pi);
                     pi.dwFlags = PI_NOUI;
                     pi.lpUserName = userName;
-                    pi.lpProfilePath = userInfo.profile;
 
                     retValue = LoadUserProfile(phTokenDup, ref pi);
                     if (!retValue)
